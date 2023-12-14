@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ATOM STRUCTURE VARIABLEexpression : structure_list\n\t\t\t\t\t  | atom\n\t\t\t\t\t  | variableatom : ATOMvariable : VARIABLEstructure : STRUCTUREstructure_list : STRUCTURE\n\t\t\t\t\t\t  | structure_list STRUCTURE'
+_lr_signature = 'ATOM COMMA LPAREN RPAREN STRUCTURE VARIABLEexpression : structure_list\n\t\t\t\t\t  | atom\n\t\t\t\t\t  | variableatom : ATOMvariable : VARIABLEstructure : atom LPAREN arg_list RPARENarg_list : arg\n\t\t\t\t\t| arg_list COMMA argarg : ATOM\n\t\t\t   | VARIABLE\n\t\t\t   | STRUCTUREstructure_list : STRUCTURE\n\t\t\t\t\t\t  | structure_list STRUCTURE'
     
-_lr_action_items = {'STRUCTURE':([0,2,5,8,],[5,8,-7,-8,]),'ATOM':([0,],[6,]),'VARIABLE':([0,],[7,]),'$end':([1,2,3,4,5,6,7,8,],[0,-1,-2,-3,-7,-4,-5,-8,]),}
+_lr_action_items = {'STRUCTURE':([0,2,5,8,],[5,8,-12,-13,]),'ATOM':([0,],[6,]),'VARIABLE':([0,],[7,]),'$end':([1,2,3,4,5,6,7,8,],[0,-1,-2,-3,-12,-4,-5,-13,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -27,12 +27,17 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> structure_list','expression',1,'p_expression_structure','Parser.py',25),
-  ('expression -> atom','expression',1,'p_expression_structure','Parser.py',26),
-  ('expression -> variable','expression',1,'p_expression_structure','Parser.py',27),
-  ('atom -> ATOM','atom',1,'p_atom','Parser.py',31),
-  ('variable -> VARIABLE','variable',1,'p_variable','Parser.py',35),
-  ('structure -> STRUCTURE','structure',1,'p_structure','Parser.py',39),
-  ('structure_list -> STRUCTURE','structure_list',1,'p_structure_list','Parser.py',43),
-  ('structure_list -> structure_list STRUCTURE','structure_list',2,'p_structure_list','Parser.py',44),
+  ('expression -> structure_list','expression',1,'p_expression_structure','Parser.py',26),
+  ('expression -> atom','expression',1,'p_expression_structure','Parser.py',27),
+  ('expression -> variable','expression',1,'p_expression_structure','Parser.py',28),
+  ('atom -> ATOM','atom',1,'p_atom','Parser.py',32),
+  ('variable -> VARIABLE','variable',1,'p_variable','Parser.py',36),
+  ('structure -> atom LPAREN arg_list RPAREN','structure',4,'p_structure','Parser.py',40),
+  ('arg_list -> arg','arg_list',1,'p_arg_list','Parser.py',44),
+  ('arg_list -> arg_list COMMA arg','arg_list',3,'p_arg_list','Parser.py',45),
+  ('arg -> ATOM','arg',1,'p_arg','Parser.py',52),
+  ('arg -> VARIABLE','arg',1,'p_arg','Parser.py',53),
+  ('arg -> STRUCTURE','arg',1,'p_arg','Parser.py',54),
+  ('structure_list -> STRUCTURE','structure_list',1,'p_structure_list','Parser.py',58),
+  ('structure_list -> structure_list STRUCTURE','structure_list',2,'p_structure_list','Parser.py',59),
 ]

@@ -8,23 +8,33 @@ Rule 2     expression -> atom
 Rule 3     expression -> variable
 Rule 4     atom -> ATOM
 Rule 5     variable -> VARIABLE
-Rule 6     structure -> STRUCTURE
-Rule 7     structure_list -> STRUCTURE
-Rule 8     structure_list -> structure_list STRUCTURE
+Rule 6     structure -> atom LPAREN arg_list RPAREN
+Rule 7     arg_list -> arg
+Rule 8     arg_list -> arg_list COMMA arg
+Rule 9     arg -> ATOM
+Rule 10    arg -> VARIABLE
+Rule 11    arg -> STRUCTURE
+Rule 12    structure_list -> STRUCTURE
+Rule 13    structure_list -> structure_list STRUCTURE
 
 Terminals, with rules where they appear
 
-ATOM                 : 4
-STRUCTURE            : 6 7 8
-VARIABLE             : 5
+ATOM                 : 4 9
+COMMA                : 8
+LPAREN               : 6
+RPAREN               : 6
+STRUCTURE            : 11 12 13
+VARIABLE             : 5 10
 error                : 
 
 Nonterminals, with rules where they appear
 
-atom                 : 2
+arg                  : 7 8
+arg_list             : 6 8
+atom                 : 2 6
 expression           : 0
 structure            : 
-structure_list       : 1 8
+structure_list       : 1 13
 variable             : 3
 
 Parsing method: LALR
@@ -35,8 +45,8 @@ state 0
     (1) expression -> . structure_list
     (2) expression -> . atom
     (3) expression -> . variable
-    (7) structure_list -> . STRUCTURE
-    (8) structure_list -> . structure_list STRUCTURE
+    (12) structure_list -> . STRUCTURE
+    (13) structure_list -> . structure_list STRUCTURE
     (4) atom -> . ATOM
     (5) variable -> . VARIABLE
 
@@ -58,7 +68,7 @@ state 1
 state 2
 
     (1) expression -> structure_list .
-    (8) structure_list -> structure_list . STRUCTURE
+    (13) structure_list -> structure_list . STRUCTURE
 
     $end            reduce using rule 1 (expression -> structure_list .)
     STRUCTURE       shift and go to state 8
@@ -80,10 +90,10 @@ state 4
 
 state 5
 
-    (7) structure_list -> STRUCTURE .
+    (12) structure_list -> STRUCTURE .
 
-    STRUCTURE       reduce using rule 7 (structure_list -> STRUCTURE .)
-    $end            reduce using rule 7 (structure_list -> STRUCTURE .)
+    STRUCTURE       reduce using rule 12 (structure_list -> STRUCTURE .)
+    $end            reduce using rule 12 (structure_list -> STRUCTURE .)
 
 
 state 6
@@ -102,8 +112,8 @@ state 7
 
 state 8
 
-    (8) structure_list -> structure_list STRUCTURE .
+    (13) structure_list -> structure_list STRUCTURE .
 
-    STRUCTURE       reduce using rule 8 (structure_list -> structure_list STRUCTURE .)
-    $end            reduce using rule 8 (structure_list -> structure_list STRUCTURE .)
+    STRUCTURE       reduce using rule 13 (structure_list -> structure_list STRUCTURE .)
+    $end            reduce using rule 13 (structure_list -> structure_list STRUCTURE .)
 

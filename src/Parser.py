@@ -2,8 +2,11 @@ import ply.lex as lex
 import ply.yacc as yacc
 
 class Parser:
-	tokens = ('ATOM', 'VARIABLE', 'STRUCTURE')
+	tokens = ('ATOM', 'VARIABLE', 'STRUCTURE', 'LPAREN', 'RPAREN', 'COMMA')
 
+	t_LPAREN = r'\('
+	t_RPAREN = r'\)'
+	t_COMMA  = r','
 	t_ATOM      = r'[a-z][a-zA-Z0-9_]*'
 	t_VARIABLE  = r'[A-Z][a-zA-Z0-9_]*'
 	t_STRUCTURE = r'[a-z][a-zA-Z0-9_]*\([a-zA-Z0-9_, ]+\)'
@@ -34,16 +37,30 @@ class Parser:
 		p[0] = ('VARIABLE', p[1])
 
 	def p_structure(self, p):
-		'structure : STRUCTURE'
-		p[0] = ('STRUCTURE', p[1])
+		'''structure : atom LPAREN arg_list RPAREN'''
+		p[0] = ('STRUCTURE', f'{p[1]}({p[3]})')
+
+	def p_arg_list(self, p):
+		'''arg_list : arg
+					| arg_list COMMA arg'''
+		if len(p) == 2:  # single argument
+			p[0] = p[1]
+		else:  # argument list
+			p[0] = f'{p[1]}, {p[3]}'
+
+	def p_arg(self, p):
+		'''arg : ATOM
+			   | VARIABLE
+			   | STRUCTURE'''
+		p[0] = p[1]
 
 	def p_structure_list(self, p):
 		'''structure_list : STRUCTURE
 						  | structure_list STRUCTURE'''
 		if len(p) == 2:  # single structure
-			p[0] = [p[1]]
+			p[0] = ('STRUCTURE_LIST', [p[1]])
 		else:  # structure list
-			p[0] = p[1] + [p[2]]
+			p[0] = ('STRUCTURE_LIST', p[1][1] + [p[2]])
 
 	def p_error(self, p):
 		print(f"Syntax error in token '{p.value}'")
