@@ -1,4 +1,5 @@
 import re
+from src.Parser import Parser
 
 class Atomo():
 	def __init__(self, nombre):
@@ -38,18 +39,24 @@ class Prolog():
 		self.estructuras = {}
 		self.hechos = {}
 		self.reglas = {}
+		self.parser = Parser()
 
 	def parse(self, expresion):
+		try:
+			resultado = self.parser.parse(expresion)
+		except:
+			raise Exception("Error de sintaxis")
+		
 		# Ver si es un atomo
-		if re.match(r"^[a-z][a-zA-Z0-9]*$", expresion):
+		if resultado[0] == "ATOM":
 			return Atomo(expresion)
 
 		# Ver si es una variable
-		elif re.match(r"^[A-Z][a-zA-Z0-9]*$", expresion):
+		elif resultado[0] == "VARIABLE":
 			return Variable(expresion)
 
 		# Ver si es una estructura
-		elif re.match(r"^[a-z][a-zA-Z0-9]*\((.+)\)$", expresion):
+		elif resultado[0] == "STRUCTURE_LIST" and len(resultado[1]) == 1:
 			# Obtener el nombre de la estructura
 			nombre = re.match(r"^[a-z][a-zA-Z0-9]*", expresion).group(0)
 
@@ -65,18 +72,8 @@ class Prolog():
 			return Estructura(nombre, args)
 		
 		# Ver si es una lista de expresiones
-		elif re.match(r"^(.+)\s(.+)$", expresion):
-			# Obtener la expresion izquierda
-			izquierda = re.match(r"^(.+)\s(.+)$", expresion).group(1)
-			
-			# Obtener la expresion derecha
-			derecha = re.match(r"^(.+)\s(.+)$", expresion).group(2)
-
-			# Parsear cada expresion
-			izquierda = self.parse(izquierda.strip())
-			derecha = self.parse(derecha.strip())
-
-			return [izquierda, derecha]
+		elif resultado[0] == "STRUCTURE_LIST" and len(resultado[1]) > 1:
+			return [self.parse(expresion) for expresion in resultado[1]]
 		
 		else:
 			raise Exception("Expresion de formato inválido")
@@ -104,22 +101,3 @@ class Prolog():
 					self.estructuras[resultado.nombre] = resultado.args
 
 		return resultado
-		
-
-# expresion = "true"
-# expresion = "padre(juan,jose,maria)"
-# expresion = 'padre(X,concat(mar,ia))'
-expresion = 'abuelo(X,Y) padre(X,Z) padre(Z,Y)'
-
-
-prolog = Prolog()
-expr = prolog.definir(expresion)
-print(expr)
-for arg in expr.args:
-	match arg:
-		case Atomo():
-			print("Atomo:", arg.nombre)
-		case Variable():
-			print("Variable:", arg.nombre)
-		case Estructura():
-			print("Estructura:", arg.nombre)
