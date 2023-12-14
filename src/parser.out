@@ -1,1 +1,109 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> expression
+Rule 1     expression -> structure_list
+Rule 2     expression -> atom
+Rule 3     expression -> variable
+Rule 4     atom -> ATOM
+Rule 5     variable -> VARIABLE
+Rule 6     structure -> STRUCTURE
+Rule 7     structure_list -> STRUCTURE
+Rule 8     structure_list -> structure_list STRUCTURE
+
+Terminals, with rules where they appear
+
+ATOM                 : 4
+STRUCTURE            : 6 7 8
+VARIABLE             : 5
+error                : 
+
+Nonterminals, with rules where they appear
+
+atom                 : 2
+expression           : 0
+structure            : 
+structure_list       : 1 8
+variable             : 3
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . expression
+    (1) expression -> . structure_list
+    (2) expression -> . atom
+    (3) expression -> . variable
+    (7) structure_list -> . STRUCTURE
+    (8) structure_list -> . structure_list STRUCTURE
+    (4) atom -> . ATOM
+    (5) variable -> . VARIABLE
+
+    STRUCTURE       shift and go to state 5
+    ATOM            shift and go to state 6
+    VARIABLE        shift and go to state 7
+
+    expression                     shift and go to state 1
+    structure_list                 shift and go to state 2
+    atom                           shift and go to state 3
+    variable                       shift and go to state 4
+
+state 1
+
+    (0) S' -> expression .
+
+
+
+state 2
+
+    (1) expression -> structure_list .
+    (8) structure_list -> structure_list . STRUCTURE
+
+    $end            reduce using rule 1 (expression -> structure_list .)
+    STRUCTURE       shift and go to state 8
+
+
+state 3
+
+    (2) expression -> atom .
+
+    $end            reduce using rule 2 (expression -> atom .)
+
+
+state 4
+
+    (3) expression -> variable .
+
+    $end            reduce using rule 3 (expression -> variable .)
+
+
+state 5
+
+    (7) structure_list -> STRUCTURE .
+
+    STRUCTURE       reduce using rule 7 (structure_list -> STRUCTURE .)
+    $end            reduce using rule 7 (structure_list -> STRUCTURE .)
+
+
+state 6
+
+    (4) atom -> ATOM .
+
+    $end            reduce using rule 4 (atom -> ATOM .)
+
+
+state 7
+
+    (5) variable -> VARIABLE .
+
+    $end            reduce using rule 5 (variable -> VARIABLE .)
+
+
+state 8
+
+    (8) structure_list -> structure_list STRUCTURE .
+
+    STRUCTURE       reduce using rule 8 (structure_list -> structure_list STRUCTURE .)
+    $end            reduce using rule 8 (structure_list -> structure_list STRUCTURE .)
+

@@ -1,57 +1,56 @@
 import ply.lex as lex
 import ply.yacc as yacc
 
-# Define the list of token names
-tokens = ('ATOM', 'VARIABLE', 'STRUCTURE')
+class Parser:
+	tokens = ('ATOM', 'VARIABLE', 'STRUCTURE')
 
-# Regular expression rules for simple tokens
-t_ATOM      = r'[a-z][a-zA-Z0-9_]*'
-t_VARIABLE  = r'[A-Z][a-zA-Z0-9_]*'
-t_STRUCTURE = r'[a-z][a-zA-Z0-9_]*\([a-zA-Z0-9_, ]*\)'
-t_ignore	= ' \t'
+	t_ATOM      = r'[a-z][a-zA-Z0-9_]*'
+	t_VARIABLE  = r'[A-Z][a-zA-Z0-9_]*'
+	t_STRUCTURE = r'[a-z][a-zA-Z0-9_]*\([a-zA-Z0-9_, ]*\)'
+	t_ignore    = ' \t'
 
-def t_error(t):
-	print("Illegal character '%s'" % t.value[0])
-	t.lexer.skip(1)
-	raise Exception("Error lexico")
+	def t_error(self, t):
+		print("Illegal character '%s'" % t.value[0])
+		t.lexer.skip(1)
+		raise Exception("Error lexico")
 
-# Lexer para el parser
-lexer = lex.lex()
+	def __init__(self):
+		self.lexer = lex.lex(module=self)
+		self.parser = yacc.yacc(module=self)
+		self.parse = self.parser.parse
 
-# REGLAS
+	def p_expression_structure(self, p):
+		'''expression : structure_list
+					  | atom
+					  | variable'''
+		p[0] = p[1]
 
-def p_expression_structure(p):
-    '''expression : structure_list
-                  | atom
-                  | variable'''
-    p[0] = p[1]
+	def p_atom(self, p):
+		'atom : ATOM'
+		p[0] = ('ATOM', p[1])
 
-def p_atom(p):
-    'atom : ATOM'
-    p[0] = ('ATOM', p[1])
+	def p_variable(self, p):
+		'variable : VARIABLE'
+		p[0] = ('VARIABLE', p[1])
 
-def p_variable(p):
-    'variable : VARIABLE'
-    p[0] = ('VARIABLE', p[1])
+	def p_structure(self, p):
+		'structure : STRUCTURE'
+		p[0] = ('STRUCTURE', p[1])
 
-def p_structure_list(p):
-	'''structure_list : STRUCTURE
-					  | structure_list STRUCTURE'''
-	if len(p) == 2:  # single structure
-		p[0] = [p[1]]
-	else:  # structure list
-		p[0] = p[1] + [p[2]]
+	def p_structure_list(self, p):
+		'''structure_list : STRUCTURE
+						  | structure_list STRUCTURE'''
+		if len(p) == 2:  # single structure
+			p[0] = [p[1]]
+		else:  # structure list
+			p[0] = p[1] + [p[2]]
 
-def p_structure(p):
-    'structure : STRUCTURE'
-    p[0] = ('STRUCTURE', p[1])
-
-def p_error(p):
-	print(f"Syntax error in token '{p.value}'")
-	raise Exception("Error sintactico")
+	def p_error(self, p):
+		print(f"Syntax error in token '{p.value}'")
+		raise Exception("Error sintactico")
 
 # El parser que se va a usar
-parser = yacc.yacc()
+parser = Parser()
 
 print(parser.parse("hola"))
 print(parser.parse("hola()"))

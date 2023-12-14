@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ATOM STRUCTURE VARIABLEexpression : structure_list\n                  | atom\n                  | variableatom : ATOMvariable : VARIABLEstructure_list : STRUCTURE\n\t\t\t\t\t  | structure_list STRUCTUREstructure : STRUCTURE'
+_lr_signature = 'ATOM STRUCTURE VARIABLEexpression : structure_list\n\t\t\t\t\t  | atom\n\t\t\t\t\t  | variableatom : ATOMvariable : VARIABLEstructure : STRUCTUREstructure_list : STRUCTURE\n\t\t\t\t\t\t  | structure_list STRUCTURE'
     
-_lr_action_items = {'STRUCTURE':([0,2,5,8,],[5,8,-6,-7,]),'ATOM':([0,],[6,]),'VARIABLE':([0,],[7,]),'$end':([1,2,3,4,5,6,7,8,],[0,-1,-2,-3,-6,-4,-5,-7,]),}
+_lr_action_items = {'STRUCTURE':([0,2,5,8,],[5,8,-7,-8,]),'ATOM':([0,],[6,]),'VARIABLE':([0,],[7,]),'$end':([1,2,3,4,5,6,7,8,],[0,-1,-2,-3,-7,-4,-5,-8,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -27,12 +27,12 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> structure_list','expression',1,'p_expression_structure','Parser.py',24),
-  ('expression -> atom','expression',1,'p_expression_structure','Parser.py',25),
-  ('expression -> variable','expression',1,'p_expression_structure','Parser.py',26),
-  ('atom -> ATOM','atom',1,'p_atom','Parser.py',30),
-  ('variable -> VARIABLE','variable',1,'p_variable','Parser.py',34),
-  ('structure_list -> STRUCTURE','structure_list',1,'p_structure_list','Parser.py',38),
-  ('structure_list -> structure_list STRUCTURE','structure_list',2,'p_structure_list','Parser.py',39),
-  ('structure -> STRUCTURE','structure',1,'p_structure','Parser.py',46),
+  ('expression -> structure_list','expression',1,'p_expression_structure','Parser.py',25),
+  ('expression -> atom','expression',1,'p_expression_structure','Parser.py',26),
+  ('expression -> variable','expression',1,'p_expression_structure','Parser.py',27),
+  ('atom -> ATOM','atom',1,'p_atom','Parser.py',31),
+  ('variable -> VARIABLE','variable',1,'p_variable','Parser.py',35),
+  ('structure -> STRUCTURE','structure',1,'p_structure','Parser.py',39),
+  ('structure_list -> STRUCTURE','structure_list',1,'p_structure_list','Parser.py',43),
+  ('structure_list -> structure_list STRUCTURE','structure_list',2,'p_structure_list','Parser.py',44),
 ]
