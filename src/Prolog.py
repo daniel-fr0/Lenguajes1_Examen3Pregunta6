@@ -100,4 +100,7 @@ class Prolog():
 				else:
 					self.estructuras[resultado.nombre] = resultado.args
 
+			case list():
+				self.reglas[resultado[0].nombre] = resultado
+
 		return resultado

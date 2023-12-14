@@ -43,5 +43,25 @@ class TestProlog(unittest.TestCase):
 		result = self.prolog.parse('padre(X, Y) padre(Y, X)')
 		self.assertEqual(str(result), '[padre(X, Y), padre(Y, X)]')
 
+	def test_definir_atom(self):
+		result = self.prolog.parse('true')
+		self.prolog.definir('true')
+		self.assertEqual(self.prolog.atomos, {'true'})
+
+	def test_definir_variable(self):
+		result = self.prolog.parse('X')
+		self.prolog.definir('X')
+		self.assertEqual(self.prolog.variables, {'X'})
+
+	def test_definir_structure(self):
+		result = self.prolog.parse('padre(juan, jose)')
+		self.prolog.definir('padre(juan, jose)')
+		self.assertIn('padre', self.prolog.estructuras)
+
+	def test_definir_rule(self):
+		result = self.prolog.parse('padre(X, Y) padre(Y, X)')
+		self.prolog.definir('padre(X, Y) padre(Y, X)')
+		self.assertIn('padre', self.prolog.reglas)
+
 if __name__ == '__main__':
 	unittest.main()
