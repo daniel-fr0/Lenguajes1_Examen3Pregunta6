@@ -39,11 +39,3 @@ def p_error(p):
 
 # Build the parser
 parser = yacc.yacc()
-
-# Use the parser
-
-print(parser.parse('abuelo(X, Y) padre(X, Z) padre(Z, Y)'))
-print(parser.parse('padre(juan, jose, maria)'))
-print(parser.parse('padre X'))
-print(parser.parse('true'))
-print(parser.parse('Xvar'))
