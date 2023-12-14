@@ -17,8 +17,6 @@ def main():
 		argumentos = " ".join(entrada[1:]) 
 		entrada = [comando, argumentos] if argumentos else [comando]
 
-		print(entrada)
-
 		match entrada:
 			case ["SALIR"]:
 				break
@@ -31,7 +29,6 @@ def main():
 				
 			case ["DEF", args]:
 				# tokenizar expresion
-				print(f"Definiendo expresion...{args}")
 				print(prolog.parse(args))
 
 			case ["ASK", args]:
