@@ -6,7 +6,7 @@ class Parser:
 
 	t_ATOM      = r'[a-z][a-zA-Z0-9_]*'
 	t_VARIABLE  = r'[A-Z][a-zA-Z0-9_]*'
-	t_STRUCTURE = r'[a-z][a-zA-Z0-9_]*\([a-zA-Z0-9_, ]*\)'
+	t_STRUCTURE = r'[a-z][a-zA-Z0-9_]*\([a-zA-Z0-9_, ]+\)'
 	t_ignore    = ' \t'
 
 	def t_error(self, t):
@@ -48,13 +48,3 @@ class Parser:
 	def p_error(self, p):
 		print(f"Syntax error in token '{p.value}'")
 		raise Exception("Error sintactico")
-
-# El parser que se va a usar
-parser = Parser()
-
-print(parser.parse("hola"))
-print(parser.parse("hola()"))
-print(parser.parse("hola(a)"))
-print(parser.parse("hola(a, b) adios(c, d)"))
-resultado = parser.parse("hola(a, b) adios(c, d)")
-print(resultado[0])
