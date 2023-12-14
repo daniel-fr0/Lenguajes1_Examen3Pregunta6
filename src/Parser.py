@@ -10,20 +10,29 @@ t_VARIABLE  = r'[A-Z][a-zA-Z0-9_]*'
 t_STRUCTURE = r'[a-z][a-zA-Z0-9_]*\([a-zA-Z0-9_, ]*\)'
 t_ignore	= ' \t'
 
-# Error handling rule
 def t_error(t):
 	print("Illegal character '%s'" % t.value[0])
 	t.lexer.skip(1)
+	raise Exception("Error lexico")
 
-# Build the lexer
+# Lexer para el parser
 lexer = lex.lex()
 
-# Parsing rules
+# REGLAS
+
 def p_expression_structure(p):
-	'''expression : structure_list
-				  | ATOM
-				  | VARIABLE'''
-	p[0] = p[1]
+    '''expression : structure_list
+                  | atom
+                  | variable'''
+    p[0] = p[1]
+
+def p_atom(p):
+    'atom : ATOM'
+    p[0] = ('ATOM', p[1])
+
+def p_variable(p):
+    'variable : VARIABLE'
+    p[0] = ('VARIABLE', p[1])
 
 def p_structure_list(p):
 	'''structure_list : STRUCTURE
@@ -33,9 +42,20 @@ def p_structure_list(p):
 	else:  # structure list
 		p[0] = p[1] + [p[2]]
 
-# Error rule for syntax errors
+def p_structure(p):
+    'structure : STRUCTURE'
+    p[0] = ('STRUCTURE', p[1])
+
 def p_error(p):
 	print(f"Syntax error in token '{p.value}'")
+	raise Exception("Error sintactico")
 
-# Build the parser
+# El parser que se va a usar
 parser = yacc.yacc()
+
+print(parser.parse("hola"))
+print(parser.parse("hola()"))
+print(parser.parse("hola(a)"))
+print(parser.parse("hola(a, b) adios(c, d)"))
+resultado = parser.parse("hola(a, b) adios(c, d)")
+print(resultado[0])
