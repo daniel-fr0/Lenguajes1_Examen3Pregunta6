@@ -1,0 +1,85 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> expression
+Rule 1     expression -> structure_list
+Rule 2     expression -> ATOM
+Rule 3     expression -> VARIABLE
+Rule 4     structure_list -> STRUCTURE
+Rule 5     structure_list -> structure_list STRUCTURE
+
+Terminals, with rules where they appear
+
+ATOM                 : 2
+STRUCTURE            : 4 5
+VARIABLE             : 3
+error                : 
+
+Nonterminals, with rules where they appear
+
+expression           : 0
+structure_list       : 1 5
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . expression
+    (1) expression -> . structure_list
+    (2) expression -> . ATOM
+    (3) expression -> . VARIABLE
+    (4) structure_list -> . STRUCTURE
+    (5) structure_list -> . structure_list STRUCTURE
+
+    ATOM            shift and go to state 3
+    VARIABLE        shift and go to state 4
+    STRUCTURE       shift and go to state 5
+
+    expression                     shift and go to state 1
+    structure_list                 shift and go to state 2
+
+state 1
+
+    (0) S' -> expression .
+
+
+
+state 2
+
+    (1) expression -> structure_list .
+    (5) structure_list -> structure_list . STRUCTURE
+
+    $end            reduce using rule 1 (expression -> structure_list .)
+    STRUCTURE       shift and go to state 6
+
+
+state 3
+
+    (2) expression -> ATOM .
+
+    $end            reduce using rule 2 (expression -> ATOM .)
+
+
+state 4
+
+    (3) expression -> VARIABLE .
+
+    $end            reduce using rule 3 (expression -> VARIABLE .)
+
+
+state 5
+
+    (4) structure_list -> STRUCTURE .
+
+    STRUCTURE       reduce using rule 4 (structure_list -> STRUCTURE .)
+    $end            reduce using rule 4 (structure_list -> STRUCTURE .)
+
+
+state 6
+
+    (5) structure_list -> structure_list STRUCTURE .
+
+    STRUCTURE       reduce using rule 5 (structure_list -> structure_list STRUCTURE .)
+    $end            reduce using rule 5 (structure_list -> structure_list STRUCTURE .)
+
